@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pl">
+	<head>
+		<meta charset="utf-8">
+		<title>Animacja w Canvas</title>
+			<script type="text/javascript">
+			    var canvas
+			    var context;
+			    var x = 0;
+			    var y = 0;
+				var x2 = 0;
+			    var y2 = 0;
+			    var dx,dy,dx2,dy2;
+			    function draw() {
+			        canvas = document.getElementById('image1');
+			        context = canvas.getContext('2d');
+					y2 = canvas.height - 20;
+			        setInterval(
+						function() {
+							context.clearRect(0, 0, canvas.width, canvas.height);
+							anim(); anim2(); 
+							},20); // 1s/20 = 50 fps
+							
+			    }
+
+			    function anim() {
+					if (x <= 20) {
+						x = 20;
+						y = 20;
+						var rand = Math.abs(Math.random()*80) + 20; // predkosc losowana od 1/100 do 1/20 
+						dx = (canvas.width - 20)/rand;				// długości kanwasa/klatke
+						dy = (canvas.height - 20)/rand;
+					} else if (x >= (canvas.width - 20)) {
+						x = canvas.width - 20;
+						y = canvas.height - 20;
+						var rand = -(Math.abs(Math.random()*80) + 20);
+						dx = (canvas.width - 20)/rand;
+						dy = (canvas.height - 20)/rand;
+					}
+					x += dx;
+					y += dy;
+			        context.beginPath();
+			        context.fillStyle = "blue";
+			        context.arc(x, y, 20, 0, Math.PI * 2, true);
+			        context.closePath();
+			        context.fill();
+			    }
+				function anim2() {
+					if (x2 <= 20) {
+						x2 = 20;
+						y2 = canvas.height - 20;
+						var rand = Math.abs(Math.random()*80) + 20;
+						dx2 = (canvas.width - 20)/rand;
+						dy2 = -(canvas.height - 20)/rand;
+					} else if (x2 >= (canvas.width - 20)) {
+						x2 = canvas.width - 20;
+						y2 = 20;
+						var rand = Math.abs(Math.random()*80) + 20;
+						dx2 = -(canvas.width - 20)/rand;
+						dy2 = (canvas.height - 20)/rand;
+					}
+					x2 += dx2;
+					y2 += dy2;
+			        context.beginPath();
+			        context.fillStyle = "red";
+			        context.arc(x2, y2, 20, 0, Math.PI * 2, true);
+			        context.closePath();
+			        context.fill();
+			    }
+			</script>
+            <style type="text/css">
+	            canvas { border: 1px solid blue; }
+            </style>
+	</head>
+	<body onload="draw();">
+		<canvas id="image1" width="400" height="400">
+
+		</canvas>
+	</body>
+</html>

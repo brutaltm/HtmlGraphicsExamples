@@ -1,0 +1,68 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<title>Krzywe Beziera w Canvasie</title>
+<script>
+	function CubicBezierCurve(P0x,P0y,P1x,P1y,P2x,P2y,P3x,P3y,t) { // t to liczba między 0 a 1, P1 i P2 to punkty kontrolne
+		//B(t) = (1 -t)3P0 + 3(1 - t)2tP1 + 3(1 - t)t2P2 + t3P3
+		return [ 
+			Math.pow(1-t,3)*P0x + 3*Math.pow(1-t,2)*t*P1x + 3*(1-t)*Math.pow(t,2)*P2x + Math.pow(t,3)*P3x ,  
+			Math.pow(1-t,3)*P0y + 3*Math.pow(1-t,2)*t*P1y + 3*(1-t)*Math.pow(t,2)*P2y + Math.pow(t,3)*P3y
+		];
+	}
+	
+	function zapiszPunkty(P0x,P0y,P1x,P1y,P2x,P2y,P3x,P3y,ilosc) {
+		var punkty = [[P0x,P0y]];
+		for (var i=1; i<=ilosc-1; i++) {
+			punkty.push(CubicBezierCurve(P0x,P0y,P1x,P1y,P2x,P2y,P3x,P3y,i/(ilosc-1)));
+		}
+		return punkty;
+	}
+	
+	function rysujKwadratOkragTrojkat(punkty,rozmiar=2.5) {
+		var odl = Math.sqrt(Math.pow(punkty[1][0]-punkty[0][0],2) - Math.pow(punkty[1][1]-punkty[0][1],2))/rozmiar;
+		for (var i=0; i<punkty.length; i++) {
+			switch (i%3) {
+				case 0:
+					context.rect(punkty[i][0]-odl/2,punkty[i][1]-odl/2,odl,odl);
+					context.stroke();
+					break;
+				case 1:
+					context.beginPath();
+					context.arc(punkty[i][0],punkty[i][1],odl/2,0,2*Math.PI,false);
+					context.stroke();
+					break;
+				case 2:
+					context.beginPath();
+					context.moveTo(punkty[i][0]-odl/2,punkty[i][1]-odl/2);
+					context.lineTo(punkty[i][0]+odl/2,punkty[i][1]-odl/2);
+					context.lineTo(punkty[i][0],punkty[i][1]+odl/2);
+					context.closePath();
+					break;
+			}
+		}
+		context.stroke();
+	}
+</script>
+</head>
+<body>
+<canvas id="Canvas" width="600" height="600" style="border: 1px solid black;"></canvas>
+<script type="text/javascript">
+var canvas = document.getElementById("Canvas")
+var context = canvas.getContext('2d'); 
+context.beginPath(); 
+context.lineWidth="1";
+context.strokeStyle="black"; 
+
+var punkty1 = zapiszPunkty(300,200,430,200,430,300,300,300,31);
+var punkty2 = zapiszPunkty(300,300,430,300,430,400,300,400,31);
+var punkty3 = zapiszPunkty(300,200,310,200,290,300,300,400,21);
+
+rysujKwadratOkragTrojkat(punkty1);
+rysujKwadratOkragTrojkat(punkty2);
+rysujKwadratOkragTrojkat(punkty3,0.2);
+
+
+</script>
+</body>
+</html>

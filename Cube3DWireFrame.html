@@ -1,0 +1,156 @@
+<html>
+<head>
+<script>
+	class Punkt {
+		constructor(x,y,z) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		}
+	}
+	
+	class Trojkat {
+		constructor(p1,p2,p3) {
+			this.p1 = p1;
+			this.p2 = p2;
+			this.p3 = p3;
+		}
+	}
+	
+	function MultiplyMatrixVector(punkt, wynik, matProj) {
+		wynik.x = punkt.x * matProj[0][0] + punkt.y * matProj[1][0] + punkt.z * matProj[2][0] + matProj[3][0];
+		wynik.y = punkt.x * matProj[0][1] + punkt.y * matProj[1][1] + punkt.z * matProj[2][1] + matProj[3][1];
+		wynik.z = punkt.x * matProj[0][2] + punkt.y * matProj[1][2] + punkt.z * matProj[2][2] + matProj[3][2];
+		var w = punkt.x * matProj[0][3] + punkt.y * matProj[1][3] + punkt.z * matProj[2][3] + matProj[3][3];
+		if (w != 0.0) {
+			wynik.x = wynik.x / w;
+			wynik.y = wynik.y / w;
+			wynik.z = wynik.z / w;
+		}
+	}
+	
+	function drawFrame(meshCube, matProj, matRotX, matRotZ) {
+		fNewTime = new Date().getTime();
+		fElapsedTime = fNewTime - fOldTime;
+		fOldTime = fNewTime;
+		fTheta += 1.0 * fElapsedTime/1000;
+		
+		// Rot Z
+		matRotZ[0][0] = Math.cos(fTheta);
+		matRotZ[0][1] = Math.sin(fTheta);
+		matRotZ[1][0] = -Math.sin(fTheta);
+		matRotZ[1][1] = Math.cos(fTheta);
+		matRotZ[2][2] = 1;
+		matRotZ[3][3] = 1;
+		
+		// Rot X
+		matRotX[0][0] = 1;
+		matRotX[1][1] = Math.cos(fTheta * 0.5);
+		matRotX[1][2] = Math.sin(fTheta * 0.5);
+		matRotX[2][1] = -Math.sin(fTheta * 0.5);
+		matRotX[2][2] = Math.cos(fTheta * 0.5);
+		matRotX[3][3] = 1;
+		
+		context.clearRect(-canvas.width/2,-canvas.height/2,canvas.width,canvas.height);
+		context.strokeRect(-canvas.width/2,-canvas.height/2,canvas.width,canvas.height);
+		
+		for (var i=0; i<meshCube.length; i++) {
+		
+			triProjected = new Trojkat(new Punkt(0.0, 0.0, 0.0), new Punkt(0.0, 1.0, 0.0), new Punkt(1.0, 1.0, 0.0));
+			triRotatedZ = new Trojkat(new Punkt(0.0, 0.0, 0.0), new Punkt(0.0, 1.0, 0.0), new Punkt(1.0, 1.0, 0.0));
+			triRotatedX = new Trojkat(new Punkt(0.0, 0.0, 0.0), new Punkt(0.0, 1.0, 0.0), new Punkt(1.0, 1.0, 0.0));
+		
+			MultiplyMatrixVector(meshCube[i].p1, triRotatedZ.p1, matRotZ); 
+			MultiplyMatrixVector(meshCube[i].p2, triRotatedZ.p2, matRotZ); 
+			MultiplyMatrixVector(meshCube[i].p3, triRotatedZ.p3, matRotZ); 
+			
+			MultiplyMatrixVector(triRotatedZ.p1, triRotatedX.p1, matRotX); 
+			MultiplyMatrixVector(triRotatedZ.p2, triRotatedX.p2, matRotX); 
+			MultiplyMatrixVector(triRotatedZ.p3, triRotatedX.p3, matRotX);
+		
+			triRotatedX.p1.z += 3.0;
+			triRotatedX.p2.z += 3.0;
+			triRotatedX.p3.z += 3.0;
+			MultiplyMatrixVector(triRotatedX.p1, triProjected.p1, matProj); 
+			MultiplyMatrixVector(triRotatedX.p2, triProjected.p2, matProj); 
+			MultiplyMatrixVector(triRotatedX.p3, triProjected.p3, matProj); 
+			
+			//triProjected.p1.x += 1.0; triProjected.p1.y += 1.0;
+			//triProjected.p2.x += 1.0; triProjected.p2.y += 1.0;
+			//triProjected.p3.x += 1.0; triProjected.p3.y += 1.0;
+
+			triProjected.p1.x *= 0.5 * canvas.width;
+			triProjected.p1.y *= 0.5 * canvas.height;
+			triProjected.p2.x *= 0.5 * canvas.width;
+			triProjected.p2.y *= 0.5 * canvas.height;
+			triProjected.p3.x *= 0.5 * canvas.width;
+			triProjected.p3.y *= 0.5 * canvas.height;
+			
+			context.beginPath();
+			context.moveTo(triProjected.p1.x, triProjected.p1.y);
+			context.lineTo(triProjected.p2.x, triProjected.p2.y);
+			context.lineTo(triProjected.p3.x, triProjected.p3.y);
+			context.closePath();
+			context.stroke();
+		}
+	}
+	
+	function start() {
+		canvas = document.getElementById('image');
+		context = canvas.getContext('2d');
+		context.translate(canvas.width/2,canvas.height/2);
+		
+		var matProj = [], matRotZ = [], matRotX = [];
+		for (var i=0; i<4; i++) {
+			matProj[i] = new Array(4).fill(0);
+			matRotZ[i] = new Array(4).fill(0);
+			matRotX[i] = new Array(4).fill(0);
+		}
+		var fNear = 0.1;
+		var fFar = 1000.0;
+		var fFov = 90.0;
+		var fAspectRatio = canvas.height / canvas.width;
+		var fFovRad = 1.0 / Math.tan(fFov * 0.5 / 180.0 * Math.PI);
+		fTheta = 0.0;
+		
+		matProj[0][0] = fAspectRatio * fFovRad;
+		matProj[1][1] = fFovRad;
+		matProj[2][2] = fFar / (fFar - fNear);
+		matProj[3][2] = (-fFar * fNear) / (fFar - fNear);
+		matProj[2][3] = 1.0;
+		matProj[3][3] = 0.0;
+		
+		var meshCube = [ 
+			// SOUTH
+			new Trojkat(new Punkt(0.0, 0.0, 0.0), new Punkt(0.0, 1.0, 0.0), new Punkt(1.0, 1.0, 0.0)), 
+			new Trojkat(new Punkt(0.0, 0.0, 0.0), new Punkt(1.0, 1.0, 0.0), new Punkt(1.0, 0.0, 0.0)), 
+			// EAST
+			new Trojkat(new Punkt(1.0, 0.0, 0.0), new Punkt(1.0, 1.0, 0.0), new Punkt(1.0, 1.0, 1.0)), 
+			new Trojkat(new Punkt(1.0, 0.0, 0.0), new Punkt(1.0, 1.0, 1.0), new Punkt(1.0, 0.0, 1.0)), 
+			// NORTH
+			new Trojkat(new Punkt(1.0, 0.0, 1.0), new Punkt(1.0, 1.0, 1.0), new Punkt(0.0, 1.0, 1.0)), 
+			new Trojkat(new Punkt(1.0, 0.0, 1.0), new Punkt(0.0, 1.0, 1.0), new Punkt(0.0, 0.0, 1.0)), 
+			// WEST
+			new Trojkat(new Punkt(0.0, 0.0, 1.0), new Punkt(0.0, 1.0, 1.0), new Punkt(0.0, 1.0, 0.0)), 
+			new Trojkat(new Punkt(0.0, 0.0, 1.0), new Punkt(0.0, 1.0, 0.0), new Punkt(0.0, 0.0, 0.0)), 
+			// TOP
+			new Trojkat(new Punkt(0.0, 1.0, 0.0), new Punkt(0.0, 1.0, 1.0), new Punkt(1.0, 1.0, 1.0)), 
+			new Trojkat(new Punkt(0.0, 1.0, 0.0), new Punkt(1.0, 1.0, 1.0), new Punkt(1.0, 1.0, 0.0)), 
+			// BOTTOM
+			new Trojkat(new Punkt(1.0, 0.0, 1.0), new Punkt(0.0, 0.0, 1.0), new Punkt(0.0, 0.0, 0.0)), 
+			new Trojkat(new Punkt(1.0, 0.0, 1.0), new Punkt(0.0, 0.0, 0.0), new Punkt(1.0, 0.0, 0.0)), 
+		];
+	
+		
+		fOldTime = new Date().getTime();
+		akcja = setInterval(function() {drawFrame(meshCube,matProj,matRotX,matRotZ)},6);
+		
+		
+	}
+	
+</script>
+</head>
+<body onload="start();">
+	<canvas id="image" width="500" height="500"></canvas>
+</body>
+</html>

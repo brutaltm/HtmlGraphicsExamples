@@ -1,0 +1,269 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<title>Lab5Zad5 Bartosz Ruta</title>
+<script>
+	function zwrocRGB(srodekX,srodekY,srodekZ) {
+		var red, green, blue;
+		if (kolormaxtomin) {
+			red = 255;
+			if (roznicaZ != 0)
+				red = 255 - (srodekZ - srodekMinZ) / roznicaZ * 255.
+			green = 255 - (srodekX - srodekMinX) / roznicaX * 255; 
+			blue = 255 - (srodekY - srodekMinY) / roznicaY * 255;
+		} else {
+			red = 0;
+			if (roznicaZ != 0)
+				red = (srodekZ - srodekMinZ) / roznicaZ * 255.
+			green = (srodekX - srodekMinX) / roznicaX * 255; 
+			blue = (srodekY - srodekMinY) / roznicaY * 255;
+		}
+		return "RGB("+ red + "," + green + "," + blue + ")";
+	}
+	
+	function rysuj(m,n,linia) {
+		context.clearRect(0,0,canvas.width,-canvas.height);
+
+		if (canvas.width % n != 0 || canvas.height % m != 0) { // Niecałkowite współrzędne
+			if (linia) { // rysowanie linii
+				for (var i=0; i<m; i++) {
+					for (var j=0; j<n; j++) {
+						//
+						context.beginPath();
+						context.moveTo(Math.round(punktyPrzeciecia[i][j][0]),Math.round(-punktyPrzeciecia[i][j][1]));
+						context.lineTo(Math.round(punktyPrzeciecia[i][j+1][0]),Math.round(-punktyPrzeciecia[i][j+1][1]));
+						context.lineTo(Math.round(punktyPrzeciecia[i+1][j+1][0]),Math.round(-punktyPrzeciecia[i+1][j+1][1]));
+						context.lineTo(Math.round(punktyPrzeciecia[i+1][j][0]),Math.round(-punktyPrzeciecia[i+1][j][1]));
+						//context.lineTo(punktyPrzeciecia[i][j][0],-punktyPrzeciecia[i][j][1]);
+						context.closePath();
+						context.stroke();
+						
+						var srodekX = (Math.min(punktyPrzeciecia[i][j][0],punktyPrzeciecia[i+1][j][0]) + Math.max(punktyPrzeciecia[i][j+1][0],punktyPrzeciecia[i+1][j+1][0])) / 2
+						var srodekY = (Math.min(punktyPrzeciecia[i][j][1],punktyPrzeciecia[i][j+1][1]) + Math.max(punktyPrzeciecia[i+1][j][1],punktyPrzeciecia[i+1][j+1][1])) / 2
+						var srodekZ = 0;
+						context.fillStyle=zwrocRGB(srodekX,srodekY,srodekZ);
+						context.fill();
+
+					}
+				}
+			}
+			else { // bez rysowania linii
+				for (var i=0; i<m; i++) {
+					for (var j=0; j<n; j++) {
+						//
+						context.beginPath();
+						context.moveTo(Math.round(punktyPrzeciecia[i][j][0]),Math.round(-punktyPrzeciecia[i][j][1]));
+						context.lineTo(Math.round(punktyPrzeciecia[i][j+1][0]),Math.round(-punktyPrzeciecia[i][j+1][1]));
+						context.lineTo(Math.round(punktyPrzeciecia[i+1][j+1][0]),Math.round(-punktyPrzeciecia[i+1][j+1][1]));
+						context.lineTo(Math.round(punktyPrzeciecia[i+1][j][0]),Math.round(-punktyPrzeciecia[i+1][j][1]));
+						//context.lineTo(punktyPrzeciecia[i][j][0],-punktyPrzeciecia[i][j][1]);
+						context.closePath();
+						//context.stroke();
+						
+						var srodekX = (Math.min(punktyPrzeciecia[i][j][0],punktyPrzeciecia[i+1][j][0]) + Math.max(punktyPrzeciecia[i][j+1][0],punktyPrzeciecia[i+1][j+1][0])) / 2
+						var srodekY = (Math.min(punktyPrzeciecia[i][j][1],punktyPrzeciecia[i][j+1][1]) + Math.max(punktyPrzeciecia[i+1][j][1],punktyPrzeciecia[i+1][j+1][1])) / 2
+						var srodekZ = 0;
+						context.fillStyle=zwrocRGB(srodekX,srodekY,srodekZ);
+						context.fill();
+
+					}
+				}
+			}
+		}
+		else { // Całkowite współrzędne
+			if (linia) { // Rysowanie linii
+				for (var i=0; i<m; i++) {
+					for (var j=0; j<n; j++) {
+						//
+						context.beginPath();
+						context.moveTo(punktyPrzeciecia[i][j][0],-punktyPrzeciecia[i][j][1]);
+						context.lineTo(punktyPrzeciecia[i][j+1][0],-punktyPrzeciecia[i][j+1][1]);
+						context.lineTo(punktyPrzeciecia[i+1][j+1][0],-punktyPrzeciecia[i+1][j+1][1]);
+						context.lineTo(punktyPrzeciecia[i+1][j][0],-punktyPrzeciecia[i+1][j][1]);
+						//context.lineTo(punktyPrzeciecia[i][j][0],-punktyPrzeciecia[i][j][1]);
+						context.closePath();
+						context.stroke();
+						
+						var srodekX = (Math.min(punktyPrzeciecia[i][j][0],punktyPrzeciecia[i+1][j][0]) + Math.max(punktyPrzeciecia[i][j+1][0],punktyPrzeciecia[i+1][j+1][0])) / 2
+						var srodekY = (Math.min(punktyPrzeciecia[i][j][1],punktyPrzeciecia[i][j+1][1]) + Math.max(punktyPrzeciecia[i+1][j][1],punktyPrzeciecia[i+1][j+1][1])) / 2
+						var srodekZ = 0;
+						context.fillStyle=zwrocRGB(srodekX,srodekY,srodekZ);
+						context.fill();
+
+					}
+				}
+			}
+			else { // Bez rysowania linii
+				for (var i=0; i<m; i++) {
+					for (var j=0; j<n; j++) {
+						//
+						context.beginPath();
+						context.moveTo(punktyPrzeciecia[i][j][0],-punktyPrzeciecia[i][j][1]);
+						context.lineTo(punktyPrzeciecia[i][j+1][0],-punktyPrzeciecia[i][j+1][1]);
+						context.lineTo(punktyPrzeciecia[i+1][j+1][0],-punktyPrzeciecia[i+1][j+1][1]);
+						context.lineTo(punktyPrzeciecia[i+1][j][0],-punktyPrzeciecia[i+1][j][1]);
+						//context.lineTo(punktyPrzeciecia[i][j][0],-punktyPrzeciecia[i][j][1]);
+						context.closePath();
+						//context.stroke();
+						
+						var srodekX = (Math.min(punktyPrzeciecia[i][j][0],punktyPrzeciecia[i+1][j][0]) + Math.max(punktyPrzeciecia[i][j+1][0],punktyPrzeciecia[i+1][j+1][0])) / 2
+						var srodekY = (Math.min(punktyPrzeciecia[i][j][1],punktyPrzeciecia[i][j+1][1]) + Math.max(punktyPrzeciecia[i+1][j][1],punktyPrzeciecia[i+1][j+1][1])) / 2
+						var srodekZ = 0;
+						context.fillStyle=zwrocRGB(srodekX,srodekY,srodekZ);
+						context.fill();
+
+					}
+				}
+			}
+		}
+	}
+
+	function rysujiwypelnij(n,m,linia,maxtomin) {
+		context.clearRect(0,0,canvas.width,-canvas.height);
+		punktyPrzeciecia = [];
+		kolormaxtomin = maxtomin;
+		n = parseInt(n);
+		m = parseInt(m);
+		var dX = canvas.width/n, dY = canvas.height/m;
+
+		for (var i=0; i<m+1; i++) {
+			punktyPrzeciecia.push(new Array());
+			for (var j=0; j<n+1; j++) {
+				punktyPrzeciecia[i].push([j*dX,i*dY]);
+			}
+		}
+		console.log(punktyPrzeciecia);
+		
+		
+		// Minimalna odległość
+		srodekMinX = (Math.min(punktyPrzeciecia[0][0][0],punktyPrzeciecia[0+1][0][0]) + Math.max(punktyPrzeciecia[0][0+1][0],punktyPrzeciecia[0+1][0+1][0])) / 2
+		srodekMinY = (Math.min(punktyPrzeciecia[0][0][1],punktyPrzeciecia[0][0+1][1]) + Math.max(punktyPrzeciecia[0+1][0][1],punktyPrzeciecia[0+1][0+1][1])) / 2
+		srodekMinZ = 0;
+		
+		// Maksymalna odległość
+		var srodekMaxX = (Math.min(punktyPrzeciecia[m-1][n-1][0],punktyPrzeciecia[m][n-1][0]) + Math.max(punktyPrzeciecia[m-1][n][0],punktyPrzeciecia[m][n][0])) / 2
+		var srodekMaxY = (Math.min(punktyPrzeciecia[m-1][n-1][1],punktyPrzeciecia[m-1][n][1]) + Math.max(punktyPrzeciecia[m][n-1][1],punktyPrzeciecia[m][n][1])) / 2
+		var srodekMaxZ = 0;
+
+		roznicaX = Math.abs(srodekMaxX - srodekMinX);
+		roznicaY = Math.abs(srodekMaxY - srodekMinY);
+		roznicaZ = Math.abs(srodekMaxZ - srodekMinZ);
+		
+		rysuj(m,n,linia);
+		enableEvents(linia);
+	}
+	
+	function translacja(wiersz,kolumna,odlX,odlY,linia) {
+		wiersz = parseInt(wiersz);
+		kolumna = parseInt(kolumna);
+		odlX = parseInt(odlX);
+		odlY = parseInt(odlY);
+		punktyPrzeciecia[wiersz][kolumna][0] += odlX;
+		punktyPrzeciecia[wiersz][kolumna][1] += odlY;
+		rysuj(punktyPrzeciecia.length-1,punktyPrzeciecia[0].length-1,linia);
+	}
+	
+	function skaluj(wiersz,kolumna,skalaX,skalaY,linia) {
+		wiersz = parseInt(wiersz);
+		kolumna = parseInt(kolumna);
+		skalaX = parseFloat(skalaX);
+		skalaY = parseFloat(skalaY);
+		if (wiersz > 0 && wiersz < punktyPrzeciecia.length && kolumna > 0 && kolumna < punktyPrzeciecia[0].length) {
+			var atodX = Math.abs(punktyPrzeciecia[wiersz][kolumna-1][0] - punktyPrzeciecia[wiersz-1][kolumna-1][0]);
+			var atodY = Math.abs(punktyPrzeciecia[wiersz][kolumna-1][1] - punktyPrzeciecia[wiersz-1][kolumna-1][1]);
+			punktyPrzeciecia[wiersz][kolumna-1][0] += (atodX * (skalaX - 1))
+			punktyPrzeciecia[wiersz][kolumna-1][1] += (atodY * (skalaY - 1))
+			var atobX = Math.abs(punktyPrzeciecia[wiersz-1][kolumna][0] - punktyPrzeciecia[wiersz-1][kolumna-1][0]);
+			var atobY = Math.abs(punktyPrzeciecia[wiersz-1][kolumna][1] - punktyPrzeciecia[wiersz-1][kolumna-1][1]);
+			punktyPrzeciecia[wiersz-1][kolumna][0] += (atobX * (skalaX - 1))
+			punktyPrzeciecia[wiersz-1][kolumna][1] += (atobY * (skalaY - 1))
+			var btocX = Math.abs(punktyPrzeciecia[wiersz][kolumna][0] - punktyPrzeciecia[wiersz-1][kolumna][0]);
+			var btocY = Math.abs(punktyPrzeciecia[wiersz][kolumna][1] - punktyPrzeciecia[wiersz-1][kolumna][1]);
+			punktyPrzeciecia[wiersz][kolumna][0] += (btocX * (skalaX - 1))
+			punktyPrzeciecia[wiersz][kolumna][1] += (btocY * (skalaY - 1))
+			var dtocX = Math.abs(punktyPrzeciecia[wiersz][kolumna][0] - punktyPrzeciecia[wiersz][kolumna-1][0]);
+			var dtocY = Math.abs(punktyPrzeciecia[wiersz][kolumna][1] - punktyPrzeciecia[wiersz][kolumna-1][1]);
+			punktyPrzeciecia[wiersz][kolumna][0] += (dtocX * (skalaX - 1))
+			punktyPrzeciecia[wiersz][kolumna][1] += (dtocY * (skalaY - 1))
+			rysuj(punktyPrzeciecia.length-1,punktyPrzeciecia[0].length-1,linia);
+		}
+	}
+	function enableEvents(linia) {
+		canvas.addEventListener('mousedown', e => {
+		  var x = e.offsetX;
+		  var y = canvas.height - e.offsetY;
+		  //var tolerancja = 0.25;
+		  var m = punktyPrzeciecia.length-1, n = punktyPrzeciecia[0].length-1, dx = canvas.width/n, dy = canvas.height/m; 
+		  //zaznWiersz = Math.round((canvas.height - y) / dy);
+		  //zaznKolumna = Math.round(x / dx);
+		  //isDrawing = true;
+		  var minodl = Math.sqrt(Math.pow(punktyPrzeciecia[0][0][0] - x,2) + Math.pow(punktyPrzeciecia[0][0][1] - y,2));
+		  zaznWiersz = 0;
+		  zaznKolumna = 0;
+		  for (var i=0; i<=m; i++) {
+			for (var j=0; j<=n; j++) {
+				var odl2 = Math.sqrt(Math.pow(punktyPrzeciecia[i][j][0] - x,2) + Math.pow(punktyPrzeciecia[i][j][1] - y,2));
+				if ( odl2 < minodl ) {
+					minodl = odl2;
+					zaznWiersz = i;
+					zaznKolumna = j;
+				}
+			}
+		  }
+		  console.log(zaznWiersz);
+		  isDrawing = true;
+		});
+		
+		canvas.addEventListener('mousemove', e => {
+		  if (isDrawing === true) {
+			var m = punktyPrzeciecia.length, n = punktyPrzeciecia[0].length
+			//console.log(zaznWiersz);
+			//console.log(zaznKolumna);
+			punktyPrzeciecia[zaznWiersz][zaznKolumna][0] = e.offsetX;
+			punktyPrzeciecia[zaznWiersz][zaznKolumna][1] = canvas.height - e.offsetY;
+			x = 0;
+			y = 0;
+			//isDrawing = false;
+			rysuj(m-1,n-1,linia)
+		  }
+		});
+		
+		canvas.addEventListener('mouseup', e => {
+		  if (isDrawing === true) {
+		  /*
+			var m = punktyPrzeciecia.length, n = punktyPrzeciecia[0].length
+			console.log(zaznWiersz);
+			console.log(zaznKolumna);
+			punktyPrzeciecia[zaznWiersz][zaznKolumna][0] = e.offsetX;
+			punktyPrzeciecia[zaznWiersz][zaznKolumna][1] = canvas.height - e.offsetY;
+			x = 0;
+			y = 0;
+			*/
+			isDrawing = false;
+			//rysuj(m-1,n-1,linia)
+		  }
+		});
+	}
+</script>
+</head>
+<body>
+<canvas id="Canvas" width="500" height="500" style="border: 1px solid black;"></canvas>
+<form name='formularz'>
+	Prostokąty na osi X: <input type='number' value=10 name='n'><br>
+	Prostokąty na osi Y: <input type='number' value=10 name='m'><br>
+	Rysować linie? <input type="checkbox" name="linia" value="Tak" checked><br>
+	Kolor od Max do Min? <input type="checkbox" name="maxtomin" value="Tak"><br>
+	<input type="button" value='Rysuj' onclick='rysujiwypelnij(this.form.n.value,this.form.m.value,this.form.linia.checked,this.form.maxtomin.checked);'>
+</form>
+<script type="text/javascript">
+var canvas = document.getElementById("Canvas")
+var context = canvas.getContext('2d'); 
+var punktyPrzeciecia = [];
+var pozycja = [0,0,0];
+var roznicaX, roznicaY, roznicaZ, srodekMinX, srodekMinY, srodekMinZ, kolormaxtomin, isDrawing = false, zaznWiersz, zaznKolumna;
+context.translate(0,500);
+context.lineWidth = 1;
+enableEvents();
+</script>
+</body>
+</html>

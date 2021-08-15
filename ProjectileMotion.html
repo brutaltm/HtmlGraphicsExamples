@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pl">
+	<head>
+		<meta charset="utf-8">
+		<title>Animacja w Canvas</title>
+			<script type="text/javascript">
+			    var canvas;
+			    var context;
+			    var x = 0;
+			    var y = 0;
+				var x0 = 10;
+				var y0;
+				var t = 0;
+				var dt = 0.02; // milisekundy, 20ms = 0.02 s = 50 fps, 7ms = 143 fps
+				var akcja;
+				var v0 = 25; // 25 m/s
+				var kat = 45.0 * Math.PI/180;
+				var skala = 10; // 1m = {skala} pikseli
+				
+			    function draw(a,v) {
+			        canvas = document.getElementById('image1');
+			        context = canvas.getContext('2d');
+					y0 = canvas.height - 10;
+					kat = a * Math.PI/180;
+					v0 = v;
+					clearInterval(akcja);
+					t = 0;
+			        akcja = setInterval(anim,dt*1000); // 1s/20 = 50 fps
+			    }
+
+			    function anim() {
+					context.clearRect(0, 0, canvas.width, canvas.height);
+					var i=0;
+					while (i<canvas.width) {
+						i+=10*skala;
+						context.fillRect(i,canvas.height-5,1,5);
+						context.fillRect(0,canvas.height-i,5,1);
+					}
+					//x(t)=vx*t=v0*t*sin(α)
+					//y(t)=v0*t*sin(α)−0.5*g*t2
+					x = x0 + ((v0 * t * Math.cos(kat)) * skala);
+					y = y0 - ((v0 * t * Math.sin(kat) - 0.5*9.81*t*t) * skala);
+					t += dt;
+					
+					if (y > canvas.height - 10) {
+						y = canvas.height - 10;
+						t = 0;
+						clearInterval(akcja);
+					}
+					
+			        context.beginPath();
+			        context.fillStyle = "blue";
+			        context.arc(x, y, 10, 0, Math.PI * 2, true);
+			        context.closePath();
+			        context.fill();
+			    }
+			</script>
+            <style type="text/css">
+	            canvas { border: 1px solid blue; }
+            </style>
+	</head>
+	<body>
+		<canvas id="image1" width="1000" height="400">
+
+		</canvas><br>
+		Przedziały co 10 metrów. <br>
+		<form>
+			Kąt: <input type='number' name='a' value='45'><br>
+			Prędkość pocz. [m/s]: <input type='number' name='v' value='25'><br>
+			<input type="button" value="Pokaż" onclick='draw(this.form.a.value,this.form.v.value);'><br>
+		</form>
+	</body>
+</html>
